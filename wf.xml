@@ -1,0 +1,85 @@
+<wf vision="3.0">
+	<SiteName>youjia.api</SiteName>
+	<Chartset>UTF-8</Chartset>
+	<!-- 
+		系统命名空间，系统加载类需要
+	 -->
+	<Namespace>biz.youjia</Namespace>
+	<!-- 
+		当前系统模式 OFFLINE:线下模式，ONLINE：线上模式,ONLINE模式下开启缓存等
+	 -->
+	<Mode>OFFLINE</Mode>
+	<!-- 
+		数据库配置信息：
+			name:配置名称，可以任意填写
+			dbname:数据库名称
+			host：数据库地址
+			host2：备库地址，HA功能中使用
+			dirvers：数据库驱动
+			username:数据库用户名
+			passwd:数据库密码
+			timeout:链接超时时间
+			encoder：数据库编码
+			ConnPool数据库连接池配置:
+			maxPoolSize:数据库链接最大数
+			minPoolSize：数据库链接最小数
+			idleTimeout:链接空闲回收时间，单位秒
+	 -->
+	<DAO>
+		<database name="youia" dbname="youjia" host="{IP:Port}" host2="{IP:Port}" drivers="com.mysql.jdbc.Driver" username="{username}" passwd="{password}" timeout="1000" encoder="utf-8">
+				<ConnPool maxPoolSize="10" minPoolSize="1" idleTimeout="10" autoShrink="true" />
+		</database>
+		<converter name="jsonConverter" class="org.spat.wf.mvc.dao.JsonConverter"/>
+	</DAO>
+	<!-- 
+		缓存配置
+	 -->
+	<Cache enable="true" type="memcached" expiry="0">
+		<Properties>
+			<item name="host" value=""/>
+			<item name="port" value=""/>
+		</Properties>
+	</Cache>
+	<!-- 
+		Session配置
+	 -->
+	<Session store="local" expiry="1200">
+		<Properties>
+			<item name="host" value=""/>
+			<item name="port" value=""/>
+		</Properties>
+	</Session>
+	<!-- 
+		调试跟踪，enable=true启用
+		mode：
+		1.page：在当前页面显示
+		2.log:在log日志中显示
+	 -->
+	<Trace enable="false" mode="page"/>
+	<!-- 
+		日志配置，path：日志存放路径, type:{Files,UDP},config：配置信息
+	 -->
+	<Logger type="org.spat.wf.log.Logger4j" level="error">
+		<Properties>
+			<item name="log4j.rootLogger" value="INFO, stdout"/>
+			<item name="log4j.appender.file.File" value="/opt/logs/"/>
+			<item name="log4j.appender.file.DatePattern" value="'.'yyyy-MM-dd"/>
+			<item name="log4j.appender.stdout" value="org.apache.log4j.ConsoleAppender"/>
+			<item name="log4j.appender.stdout.Target" value="System.out"/>
+			<item name="log4j.appender.stdout.layout" value="org.apache.log4j.PatternLayout"/>
+			<item name="log4j.appender.stdout.layout.ConversionPattern" value="%m%n"/>
+			<item name="log4j.appender.file" value="org.apache.log4j.DailyRollingFileAppender"/>
+			<item name="log4j.appender.file.Append" value="true"/>
+			<item name="log4j.appender.file.Threshold" value="INFO"/>
+			<item name="log4j.appender.file.layout" value="org.apache.log4j.PatternLayout"/>
+			<item name="log4j.appender.file.layout.ConversionPattern" value="%d{ABSOLUTE} %5p %c{1}:%L - %m%n"/>
+		</Properties>
+	</Logger>
+	<!-- 
+		系统中其他信息存储
+	 -->
+	<Properties>
+		<item name="abc" value="dd"/>
+	</Properties>
+</wf>
+
