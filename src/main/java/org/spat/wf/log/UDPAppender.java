@@ -53,8 +53,7 @@ public class UDPAppender extends AppenderSkeleton {
     @Override
     protected void append(LoggingEvent event) {
         try {
-            String msg = "UDP Appender...send data: "
-                    + this.getLayout().format(event);
+            String msg =  this.getLayout().format(event);
             data = msg.getBytes();
             dataPacket = new DatagramPacket(data, data.length, address, port);
             dataSocket.send(dataPacket);

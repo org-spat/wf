@@ -15,12 +15,12 @@ public class LoggerFactory {
 		ILogger logger = null;
 		synchronized (loggerMap) {
 			try {
-				logger = loggerMap.get(WFConfig.Instance().getLogger().getType());
+				logger = loggerMap.get(clazz.getName());
 				if (logger == null) {
 					Constructor<?> con = Class.forName(WFConfig.Instance().getLogger().getType())
 							.getConstructor(Class.class);
 					logger = (ILogger) con.newInstance(clazz);
-					loggerMap.put(WFConfig.Instance().getLogger().getType(), logger);
+					loggerMap.put(clazz.getName(), logger);
 				}
 			} catch (Throwable e) {
 				e.printStackTrace();
@@ -33,7 +33,7 @@ public class LoggerFactory {
 		ILogger logger = null;
 		synchronized (loggerMap) {
 			try {
-				logger = loggerMap.get(WFConfig.Instance().getLogger().getType());
+				logger = loggerMap.get(name);
 				if (logger == null) {
 					Constructor<?> con = Class.forName(WFConfig.Instance().getLogger().getType())
 							.getConstructor(String.class);
