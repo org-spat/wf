@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface Interceptor {
+public @interface Filter {
 	
     String path() default ""; //路径匹配，支持正则表达式
     

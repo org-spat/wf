@@ -3,6 +3,9 @@ package org.spat.wf.mvc.action;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -11,8 +14,12 @@ import org.spat.wf.mvc.ActionResult;
 import org.spat.wf.mvc.BeatContext;
 import org.spat.wf.mvc.Dispatcher.HttpMethod;
 import org.spat.wf.mvc.WFController;
+import org.spat.wf.mvc.WFInterceptor;
+import org.spat.wf.mvc.annotation.Interceptor;
 import org.spat.wf.mvc.beat.bind.RequestBinder;
 import org.spat.wf.mvc.exception.WFException;
+import org.spat.wf.mvc.interceptor.InterceptorLoader;
+import org.spat.wf.utils.AnnotationUtils;
 import org.spat.wf.utils.PathUtils;
 import org.spat.wf.utils.PrimitiveConverter;
 
@@ -49,13 +56,14 @@ public class MethodAction extends Action {
 	 */
 	protected boolean isPattern;
 
-	//private List<WFInterceptor> interceptors = Lists.newArrayList();
+	private List<WFInterceptor> interceptors = new ArrayList<WFInterceptor>();
 
 	private final AntPathMatcher pathMatcher = new AntPathMatcher();
 
 	private final PrimitiveConverter converter = new PrimitiveConverter();
 
 	private Set<HttpMethod> supportMethods = HttpMethod.suportHttpMethods();
+	
 
 	public MethodAction(WFController controller, Method method,
 			String pathPattern, boolean isGet, boolean isPost,
@@ -70,6 +78,7 @@ public class MethodAction extends Action {
 		this.annotations = annotations;
 		this.isPattern = pathMatcher.isPattern(pathPattern)|| paramTypes.size() > 0;
 		initHttpMethods(isGet, isPost);
+		initIntercepter();//初始化拦截器
 	}
 
 	private void initHttpMethods(boolean isGet, boolean isPost) {
@@ -80,6 +89,29 @@ public class MethodAction extends Action {
 			supportMethods.add(HttpMethod.POST);
 		}
 		supportMethods = ImmutableSet.copyOf(supportMethods);
+	}
+	
+
+	private void initIntercepter() throws InstantiationException, IllegalAccessException, ClassNotFoundException{
+		List<Interceptor> annInterceptors = AnnotationUtils.filterAnnotation(annotations, Interceptor.class);
+		for (Interceptor item : annInterceptors) {
+			WFInterceptor wfInterceptor = InterceptorLoader.LoadInterceptor(item);
+			interceptors.add(wfInterceptor);
+		}
+	
+		Collections.sort(interceptors, new Comparator<WFInterceptor>() {
+			@Override
+			public int compare(WFInterceptor o1, WFInterceptor o2) {
+				 if(o1.getOrder()>o1.getOrder()){
+			        	return -1;
+			        }else if(o1.getOrder()>o1.getOrder()){
+			        	return 1;
+			        }else{
+			        	return 0;
+			        }
+			}
+		    });
+		 
 	}
 
 
@@ -93,6 +125,8 @@ public class MethodAction extends Action {
 
 		return pathPattern;
 	}
+	
+
 
 	public boolean isPattern() {
 		return isPattern;
@@ -166,4 +200,8 @@ public class MethodAction extends Action {
 		return supportMethods.contains(httpMethod);
 	}
 
+	@Override
+	public List<WFInterceptor> getInterceptor() {
+		return interceptors;
+	}
 }

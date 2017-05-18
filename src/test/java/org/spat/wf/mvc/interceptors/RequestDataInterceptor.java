@@ -1,9 +1,9 @@
 package org.spat.wf.mvc.interceptors;
 
 import org.spat.wf.mvc.BeatContext;
-import org.spat.wf.mvc.WFInterceptor;
+import org.spat.wf.mvc.WFFilter;
 
-public class RequestDataInterceptor extends WFInterceptor{
+public class RequestDataInterceptor extends WFFilter{
 	
 	@Override
 	public Boolean doFilter(BeatContext beat) throws Exception {

@@ -22,6 +22,10 @@ package org.spat.wf.utils;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import com.google.common.base.Preconditions;
 
@@ -78,6 +82,17 @@ public class AnnotationUtils {
     public static <A extends Annotation> A findAnnotation(Method method, Class<A> annotationType) {
         
        return method.getAnnotation(annotationType);
+    }
+    
+    @SuppressWarnings("unchecked")
+	public static <A extends Annotation> List<A> filterAnnotation(Set<Annotation> annotations,Class<A> annotationType){
+    	List<A> reslut = new ArrayList<A>();
+    	for (Annotation annotation : annotations) {
+			if(annotation.annotationType()==annotationType){
+				reslut.add((A) annotation);
+			}
+		}
+    	return reslut;
     }
 
 }

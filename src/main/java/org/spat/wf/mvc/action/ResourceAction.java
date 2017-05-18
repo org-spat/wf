@@ -1,10 +1,14 @@
 package org.spat.wf.mvc.action;
 
+import java.lang.annotation.Annotation;
+import java.util.List;
 import java.util.Set;
 
 import org.spat.wf.mvc.ActionResult;
 import org.spat.wf.mvc.BeatContext;
 import org.spat.wf.mvc.Dispatcher.HttpMethod;
+import org.spat.wf.mvc.WFInterceptor;
+
 import com.google.common.collect.ImmutableSet;
 
 /**
@@ -51,5 +55,13 @@ public class ResourceAction extends Action {
 
 		return supportMethods.contains(httpMethod);
 	}
+
+	@Override
+	public List<WFInterceptor> getInterceptor() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	
 
 }

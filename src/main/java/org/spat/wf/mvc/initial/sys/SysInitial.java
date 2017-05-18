@@ -11,7 +11,7 @@ public class SysInitial {
 			WFConfig.Init(sc.getRealPath("/"));
 			LoggerInit.init();
 			ActionInit.init(sc);
-			InterceptorInit.init();
+			FilterInit.init();
 			VelocityInit.init(sc);
 			XssInit.init();
 			DaoInit.init();

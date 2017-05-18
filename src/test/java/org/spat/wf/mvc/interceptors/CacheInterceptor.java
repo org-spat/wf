@@ -3,12 +3,12 @@ package org.spat.wf.mvc.interceptors;
 import java.io.IOException;
 
 import org.spat.wf.mvc.BeatContext;
-import org.spat.wf.mvc.WFInterceptor;
-import org.spat.wf.mvc.annotation.Interceptor;
-import org.spat.wf.mvc.annotation.Interceptor.Position;
+import org.spat.wf.mvc.WFFilter;
+import org.spat.wf.mvc.annotation.Filter;
+import org.spat.wf.mvc.annotation.Filter.Position;
 
-@Interceptor(path=".*",position=Position.PRE_EXE,order=1)
-public class CacheInterceptor extends WFInterceptor{
+@Filter(path=".*",position=Position.PRE_EXE,order=1)
+public class CacheInterceptor extends WFFilter{
 	@Override
 	public Boolean doFilter(BeatContext beat) throws IOException {
 		System.out.println("excute cust CacheInterceptor..........................");

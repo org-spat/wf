@@ -20,9 +20,9 @@ import org.spat.wf.log.LoggerFactory;
 import org.spat.wf.mvc.exception.HTTP404Exception;
 import org.spat.wf.mvc.exception.WFException;
 import org.spat.wf.mvc.exception.WFExceptionHandler;
+import org.spat.wf.mvc.filter.FilterHandler;
 import org.spat.wf.mvc.initial.app.AppInitial;
 import org.spat.wf.mvc.initial.sys.SysInitial;
-import org.spat.wf.mvc.interceptor.InterceptorHandler;
 import org.spat.wf.mvc.toolbox.monitor.ActionTimeMonitor;
 
 
@@ -69,11 +69,11 @@ public class WFBootstrap implements Filter{
         ActionResult result = null;
         ActionTimeMonitor actionTimeMonitor = ActionTimeMonitor.Factory.create();
         try{
-        	if(!InterceptorHandler.excuteGlobalBeforeInterceptors()){ //前置拦截器
+        	if(!FilterHandler.excuteGlobalBeforeFilters()){ //过滤器
         		return;
         	}
         	result = dispatcher.service(beat);
-        	InterceptorHandler.excuteGlobalAfterInterceptors(); //后置拦截器
+        	FilterHandler.excuteGlobalAfterFilters(); //后过滤器
         	if(result!=null){
         		result.render();
         	}

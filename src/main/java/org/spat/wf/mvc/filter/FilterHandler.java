@@ -1,18 +1,18 @@
-package org.spat.wf.mvc.interceptor;
+package org.spat.wf.mvc.filter;
 
 import java.util.regex.Pattern;
 
 import org.spat.wf.mvc.BeatContext;
-import org.spat.wf.mvc.annotation.Interceptor;
-import org.spat.wf.mvc.initial.sys.InterceptorInit;
+import org.spat.wf.mvc.annotation.Filter;
+import org.spat.wf.mvc.initial.sys.FilterInit;
 
-public final class InterceptorHandler {
+public final class FilterHandler {
 
-	public static boolean excuteGlobalBeforeInterceptors() throws Exception {
+	public static boolean excuteGlobalBeforeFilters() throws Exception {
 		boolean result = true;
 		BeatContext beat = BeatContext.current();
-		for (InterceptorWrap interceptor : InterceptorInit.getGlobalInterceptors()) {
-			if (interceptor.getPostition() == Interceptor.Position.PRE_EXE && matchPath(beat, interceptor.getPath())) {
+		for (FiterWrap interceptor : FilterInit.getGlobalFilters()) {
+			if (interceptor.getPostition() == Filter.Position.PRE_EXE && matchPath(beat, interceptor.getPath())) {
 				result = interceptor.getInterceptor().doFilter(beat);
 				if (!result) {
 					break; // 返回flase终止执行
@@ -22,11 +22,11 @@ public final class InterceptorHandler {
 		return result;
 	}
 
-	public static Boolean excuteGlobalAfterInterceptors() throws Exception {
+	public static Boolean excuteGlobalAfterFilters() throws Exception {
 		boolean result = true;
 		BeatContext beat = BeatContext.current();
-		for (InterceptorWrap interceptor : InterceptorInit.getGlobalInterceptors()) {
-			if (interceptor.getPostition() == Interceptor.Position.AFTER_EXE && matchPath(beat, interceptor.getPath())) {
+		for (FiterWrap interceptor : FilterInit.getGlobalFilters()) {
+			if (interceptor.getPostition() == Filter.Position.AFTER_EXE && matchPath(beat, interceptor.getPath())) {
 				result = interceptor.getInterceptor().doFilter(beat);
 				if (!result) {
 					break;// 返回flase终止执行
