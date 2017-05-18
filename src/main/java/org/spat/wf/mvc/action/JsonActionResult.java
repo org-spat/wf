@@ -22,12 +22,12 @@ public class JsonActionResult extends ActionResult{
 		BeatContext beat = BeatContext.current();
 		beat.getResponse().setHeader("Pragma", "No-cache");
 		beat.getResponse().setHeader("Cache-Control", "no-cache");
+		beat.getResponse().setDateHeader("Expires", -1);
 		beat.getResponse().setHeader("Content-Type", "application/json; charset=utf-8");
 		beat.getResponse().setCharacterEncoding(WFConfig.Instance().getCharset());
-		beat.getResponse().setDateHeader("Expires", -1);
+		
 		PrintWriter pw = null;
 		try {
-			
 			pw = beat.getResponse().getWriter();
 			pw.write(JsonUtil.toJson(obj));
 			pw.flush();

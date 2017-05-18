@@ -1,5 +1,8 @@
 package org.spat.wf.mvc;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -12,6 +15,9 @@ public abstract class WFController{
 
 	protected ILogger _LOG = LoggerFactory.getLogger(this.getClass());
 	protected CookieManager cookieManager;
+	
+    private static String sqlregx = "(?:')|(?:--)|(/\\*(?:.|[\\n\\r])*?\\*/)|(\\b(select|update|and|or|delete|insert|trancate|char|into|substr|ascii|declare|exec|count|master|into|drop|execute)\\b)"; 
+    private static Pattern sqlPattern = Pattern.compile(sqlregx, Pattern.CASE_INSENSITIVE);  
 	
     protected BeatContext beat() {
 		return BeatContext.current();
@@ -83,5 +89,11 @@ public abstract class WFController{
 		}
 		return value;
 	}
+
+    protected boolean verifyParam(String value){
+    	Matcher matcher = sqlPattern.matcher(value);
+    	return !matcher.find();
+    
+    }
 }
 
