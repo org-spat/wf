@@ -176,7 +176,7 @@
 
 			<plugin>
 				<artifactId>maven-source-plugin</artifactId>
-				<version>2.1</version>
+				<version>3.0.0</version>
 				<configuration>
 					<attach>true</attach>
 				</configuration>
