@@ -40,6 +40,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
 public class ActionInit {
+	protected static ILogger logger = LoggerFactory.getLogger(ActionInit.class);
 
 	private static Map<String, List<MethodAction>> ministyActions = Maps.newHashMap();
 
@@ -56,6 +57,7 @@ public class ActionInit {
 	}
 
 	public static void init(ServletContext sc) throws Exception {
+		logger.info("Staring Load controllers...");
 		List<MethodAction> methodActions = MethodActionInit.getMethodActions();
 		for (MethodAction action : methodActions) {
 			if (action.isPattern()) {
@@ -75,7 +77,7 @@ public class ActionInit {
 
 		for (Action action : resourceActions) {
 			if (exactActions.containsKey(action.path())) {
-				System.err.println("Exist same Action path :" + action.path());
+				logger.error("Exist same Action path :" + action.path());
 				continue;
 			}
 
@@ -87,13 +89,16 @@ public class ActionInit {
 }
 
 class MethodActionInit {
-	protected static ILogger log = LoggerFactory.getLogger(MethodActionInit.class);
+	protected static ILogger logger = LoggerFactory.getLogger(MethodActionInit.class);
 	private static AntPathMatcher pathMatcher = new AntPathMatcher();
 	
 	private static Map<String, WFController> controllers = new HashMap<String, WFController>();
 
 	static List<MethodAction> getMethodActions() throws Exception {
 		Set<Class<? extends WFController>> controllerClasses = parseControllers(WFConfig.Instance().getNamespace(), ".*\\.controllers\\..*Controller");
+		if(controllerClasses.size()==0){
+			logger.warn("未加载到任何Controller,请检查wf.xml中的Namesapce节点是否正确.");
+		}
 		List<MethodAction> actions = Lists.newArrayList();
 		for (Class<? extends WFController> controllerClazz : controllerClasses) {
 			List<MethodAction> subActions = analyze(controllerClazz);
@@ -110,9 +115,9 @@ class MethodActionInit {
 		for (Class<?> clazz : classSet){
 			if (rules(clazz, controllerPattern)){
 				builder.add((Class<? extends WFController>) clazz).build();
+				logger.info("----Load controller:"+clazz.getCanonicalName());
 			}		
 		}
-		log.info("path:"+controllPattern);
 		return builder.build();
 	}
 

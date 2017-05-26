@@ -1,6 +1,5 @@
 package org.spat.wf.mvc.action;
 
-import java.lang.annotation.Annotation;
 import java.util.List;
 import java.util.Set;
 

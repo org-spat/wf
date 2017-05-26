@@ -19,7 +19,7 @@ import javax.xml.ws.http.HTTPException;
 public class HttpUtil {
 	public static String doGet(String url) throws IOException{
 		Map<String, String> header = new HashMap<String, String>();
-		header.put("User-Agent", "test");
+		header.put("User-Agent", "Application-WF vesion-3.0");
 		return doGet(url,header);
 	}
 	
@@ -47,7 +47,7 @@ public class HttpUtil {
         httpURLConn.connect();
         InputStream in =httpURLConn.getInputStream();
         BufferedReader bd = new BufferedReader(new InputStreamReader(in,Charset.forName(charset)));
-        System.out.println("+++++++++++++++++++---++");
+        //System.out.println("+++++++++++++++++++---++");
         String temp;
         StringBuffer sb = new StringBuffer();
         while((temp=bd.readLine())!=null)

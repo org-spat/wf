@@ -7,10 +7,13 @@ import java.util.Set;
 import javax.servlet.ServletContext;
 
 import org.apache.velocity.app.Velocity;
+import org.spat.wf.log.ILogger;
+import org.spat.wf.log.LoggerFactory;
 import org.spat.wf.mvc.WFConfig;
 
 public class VelocityInit {
 
+	protected static ILogger logger = LoggerFactory.getLogger(VelocityInit.class);
 	private static Map<String, String> kvs = new HashMap<String, String>();
 	
 	static{
@@ -36,6 +39,7 @@ public class VelocityInit {
 	} 
 	
 	public static void init(ServletContext sc) throws Exception{
+		logger.info("Staring init velocity...");
 		Set<String> ks = kvs.keySet();
 		for (String k : ks) {
 			String value = kvs.get(k);
@@ -48,7 +52,7 @@ public class VelocityInit {
     	try {
 			Velocity.init();
 		} catch (Exception e) {
-        	System.err.println("Some Velocity properties maybe illegal, please recheck them.");
+        	logger.error("Some Velocity properties maybe illegal, please recheck them.");
         	throw new Exception("Velocity init failed!",e);
 		}
 	}
