@@ -167,7 +167,7 @@ public class WFConfig {
 	}
 	
 	public String getConfigPath(){
-		return this.rootPath+"/cofig/";
+		return this.rootPath+"/config/";
 	}
 	
 	public String getMode(){
