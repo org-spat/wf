@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import org.spat.wf.log.ILogger;
+import org.spat.wf.log.LoggerFactory;
 import org.spat.wf.mvc.WFConfig;
 import org.spat.wf.mvc.WFFilter;
 import org.spat.wf.mvc.annotation.Filter;
@@ -20,19 +22,19 @@ import com.google.common.collect.ImmutableSet;
 
 public class FilterInit {
 
+	protected static ILogger logger = LoggerFactory.getLogger(FilterInit.class);
 	private static List<FiterWrap> globalFilters;
 	
 	public static List<FiterWrap> getGlobalFilters() {
-		
 		return globalFilters;
 	}
 	
 	public  static void init() throws Exception {
+		logger.info("Staring Load filters...");
 		buildGlobalFilters() ;
 	}
 
     private static void buildGlobalFilters() throws Exception {
-    	System.out.println("Filter:path:.*\\.filters\\..*Filter");
     	Set<Class<? extends WFFilter>> interceptorsClasses = parseFilters(WFConfig.Instance().getNamespace(),".*\\.filters\\..*Filter");
     	List<FiterWrap> filters = new ArrayList<FiterWrap>();
 		for(Iterator<Class<? extends WFFilter>> it = interceptorsClasses.iterator(); it.hasNext();){
@@ -51,16 +53,13 @@ public class FilterInit {
 				}
 				
 			} catch (Exception e) {
-				System.err.println("Build global filter failed, Interceptor: " + clazz.getName());
+				logger.error("Build global filter failed, Interceptor: " + clazz.getName(),e);
 				throw new Exception("Build global filter failed!",e);
 			}
 			
 		}
 		// 根据order进行排序
         Collections.sort(filters, new FiterWrap.filterComparator());
-        for (FiterWrap f : filters) {
-        	System.out.println("Load filter : " + f.getInterceptor().getClass().getName());
-        }
 		globalFilters = ImmutableList.copyOf(filters);
 	}
 
@@ -69,12 +68,12 @@ public class FilterInit {
 		Set<Class<?>> classSet = ClassUtils.getClasses(packagePrefix);
 	    Pattern fPattern = Pattern.compile(filterPattern);
 	    ImmutableSet.Builder<Class<? extends WFFilter>> builder = ImmutableSet.builder();
-	    for (Class<?> clazz : classSet)
-	        if (rules(clazz, fPattern))
-	            builder
-	                .add((Class<? extends WFFilter>) clazz)
-	                .build();
-
+	    for (Class<?> clazz : classSet){
+	        if (rules(clazz, fPattern)){
+	            builder.add((Class<? extends WFFilter>) clazz).build();
+	            logger.info("----Load filter:"+clazz.getCanonicalName());
+	        }
+	    }
 	    return builder.build();
 	}
 	
